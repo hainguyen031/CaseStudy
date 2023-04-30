@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing Ball Game</title>
+</head>
+<style>
+    canvas{
+        background-color: gray;
+        width: 800px;
+        height: 400px;
+    }
+</style>
+<body>
+    <h1>TEST</h1>
+    <canvas id="myCanvas"></canvas>
+
+    <script>
+        let canvas = document.getElementById('myCanvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let ctx = canvas.getContext('2d');
+        let x = 50;
+        let y = 0;
+        let radius = 20;
+        let dx = 1;
+        let dy = 1;
+        let angle = 0;
+        let speed = 5;
+
+        function createCircle(){
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.fillStyle ='red';
+            ctx.fill();
+            ctx.closePath();
+
+            if (x > canvas.width - radius || x < 0) {
+               dx *= -1;
+            };
+            
+            if (  y < 0) {
+                dy *= -1;
+            };
+            if (x < playerX + 200 && x + 200 > playerX && y < playerY + 20 && y + 20 > playerY) {
+                let normal = {x: playerX - x, y: playerY - y};
+                let length = Math.sqrt(normal.x * normal.x + normal.y * normal.y);
+                normal.x /= length;
+                normal.y /= length;
+                let dot = dx * normal.x + dy * normal.y;
+                let reflect = {x: dx - 2 * dot * normal.x, y: dy - 2 * dot * normal.y};
+                angle = Math.atan2(reflect.y, reflect.x);
+
+                dx =  -Math.cos(angle);
+                dy =  -Math.sin(angle);
+            };
+
+            
+            // let speed = Math.sqrt(dx*dx+dy*dy);   // xem lại
+            // dx = reflect.x * speed;
+            // dy = reflect.y * speed;
+            x += dx * speed;
+            y += dy * speed;
+        };
+           
+        let playerX = 600;
+        let playerY = 600;
+        let playerSpeed = 5;
+
+        function drawSquare() {
+            ctx.beginPath();
+            ctx.rect(playerX, playerY, 200, 20);
+            ctx.fillStyle = "blue";
+            ctx.fill();
+            ctx.closePath();
+            if (playerX + 200 > canvas.width ) {
+                playerX = canvas.width -200;
+            };
+            if (playerX < 0) {
+                playerX = 0;
+            }
+        };
+
+        function update() {
+            if (keys["ArrowLeft"]) {
+            playerX -= playerSpeed;
+            };
+            if (keys["ArrowRight"]) {
+            playerX += playerSpeed;
+            };
+            // if (keys["ArrowUp"]) {
+            // playerY -= playerSpeed;
+            // };
+            // if (keys["ArrowDown"]) {
+            // playerY += playerSpeed;
+            // };
+            if ( y > canvas.height - radius) {
+                alert('You lose');
+                document.location.reload();
+            };
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawSquare();
+            createCircle();
+        };
+
+        const keys = {};
+        window.addEventListener("keydown", function (event) {
+            keys[event.key] = true;
+        });
+        window.addEventListener("keyup", function (event) {
+            keys[event.key] = false;
+        });
+        setInterval(update, 5);
+    </script>
+</body>
+</html>
