@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ballgame</title>
+</head>
+<style>        
+        canvas {
+        	background-color: gray;
+        	width: 600px;
+        	height: 400px;
+        	position: absolute;
+        }
+</style>
+<body>
+    <h1>Bouncing Ball Game</h1>
+    <canvas></canvas>
+
+    <script>
+         var canvas = document.querySelector("canvas");
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            var l = canvas.getContext('2d');
+            
+            // x and y are the co-ordinates of the circle
+            
+            // vx and vy are the respective speeds
+            
+            var x = Math.floor(Math.random() * innerWidth);
+            var y = Math.floor(Math.random() * innerHeight);
+            var vx = Math.floor(Math.random() * 2);
+            var vy = Math.floor(Math.random() * 4);
+            var radius = 20;
+            
+            move();
+            		
+            // This function will do the animation
+            function move() {
+            	requestAnimationFrame(move);
+            
+            	// It clears the specified pixels within
+            	// the given rectangle
+            	l.clearRect(0, 0, innerWidth, innerHeight);
+            
+            	// Creating a circle
+            	l.beginPath();
+            	l.strokeStyle = "black";
+            	l.arc(x, y, radius, 0, Math.PI * 2, false);
+            	l.stroke();
+            
+            	// Conditions sso that the ball bounces
+            	// from the edges
+            	if (radius + x > innerWidth)
+            		vx = 0 - vx;
+            
+            	if (x - radius < 0)
+            		vx = 0 - vx;
+            
+            	if (y + radius > innerHeight)
+            		vy = 0 - vy;
+            
+            	if (y - radius < 0)
+            		vy = 0 - vy;
+            
+            	x = x + vx*5;
+            	y = y + vy*5;
+            
+            };
+
+            let squareSize = 20;
+            let squareX = canvas.width / 2;
+            let squareY = canvas.height / 2;
+            let squareSpeed = 3;
+
+            function drawSquare() {
+                ctx.beginPath();
+                ctx.rect(squareX, squareY, squareSize, squareSize);
+                ctx.fillStyle = "blue";
+                ctx.fill();
+                ctx.closePath();
+            };
+    </script>
+</body>
+</html>

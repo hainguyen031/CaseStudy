@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Canvas Game</title>
+  </head>
+  <body>
+    <canvas id="gameCanvas" width="1000" height="600" style='background-color: aquamarine;'></canvas>
+    <script>
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+
+      let playerX = canvas.width / 2;
+      let playerY = canvas.height / 2;
+      let playerRadius = 10;
+      let playerSpeed = 5;
+
+      let squareSize = 20;
+      let squareX = Math.floor(Math.random() * (canvas.width - squareSize));
+      let squareY = -squareSize;
+      let squareSpeed = 3;
+
+      function drawPlayer() {
+        ctx.beginPath();
+        ctx.arc(playerX, playerY, playerRadius, 0, Math.PI * 2);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.closePath();
+        if (playerX + playerRadius > canvas.width || playerX + playerRadius < 0) {
+            playerX = canvas.width - playerRadius;
+        }
+        if (playerY + playerRadius > canvas.height || playerY + playerRadius < 0) {
+            playerY = canvas.height - playerRadius;
+        }
+
+      }
+
+      function drawSquare() {
+        ctx.beginPath();
+        ctx.rect(squareX, squareY, squareSize, squareSize);
+        ctx.fillStyle = "blue";
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      function update() {
+        // Update player position based on user input
+        if (keys["ArrowLeft"]) {
+          playerX -= playerSpeed;
+        }
+        if (keys["ArrowRight"]) {
+          playerX += playerSpeed;
+        }
+        if (keys["ArrowUp"]) {
+          playerY -= playerSpeed;
+        }
+        if (keys["ArrowDown"]) {
+          playerY += playerSpeed;
+        }
+
+        // Update square position
+        squareY += squareSpeed;
+
+        // Check for collision between player and square
+        if (
+          squareX < playerX + playerRadius * 2 &&
+          squareX + squareSize > playerX &&
+          squareY < playerY + playerRadius * 2 &&
+          squareY + squareSize > playerY
+        ) {
+          // Collision detected - game over
+          alert("Game over!");
+          document.location.reload();
+        }
+
+        // Clear canvas and draw updated game state
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawPlayer();
+        drawSquare();
+      }
+
+      // Set up keyboard input handling
+      const keys = {};
+      window.addEventListener("keydown", function (event) {
+        keys[event.key] = true;
+      });
+      window.addEventListener("keyup", function (event) {
+        keys[event.key] = false;
+      });
+
+      // Set up game loop
+      setInterval(update, 20);
+    </script>
+  </body>
+</html>
